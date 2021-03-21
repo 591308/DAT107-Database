@@ -1,0 +1,55 @@
+DROP SCHEMA IF EXISTS oblig_jpa CASCADE;
+
+CREATE SCHEMA oblig_jpa;
+SET search_path TO oblig_jpa;
+
+CREATE TABLE Avdeling
+(
+	idavdeling serial,
+	navn VARCHAR(30) not NULL,
+	idansatt int NULL,
+	CONSTRAINT Avdeling_pk PRIMARY Key(idavdeling)
+	
+);
+
+
+CREATE TABLE Ansatt
+(
+	idansatt serial not NULL,
+    brukernavn char(4) Unique NOT NULL,
+    fornavn VARCHAR(30) NOT NULL,
+    etternavn VARCHAR(30) NOT NULL,
+    ansettelsesdato DATE NOT NULL,
+    stilling VARCHAR(30) NOT NULL,
+    maanedslonn DECIMAL(10,2) NOT NULL,
+    idavdeling int not null,
+	CONSTRAINT Ansatt_pk Primary key (idansatt),
+	CONSTRAINT Avdeling_fn FOREIGN key (idavdeling) REFERENCES Avdeling(idavdeling)
+	
+);
+
+INSERT INTO 
+	Avdeling(navn)
+values 
+	('Design'),
+	('Programvareutvikling'),
+	('Kokk');
+
+INSERT INTO
+  Ansatt(brukernavn, fornavn, etternavn, ansettelsesdato, stilling, maanedslonn, idavdeling)
+VALUES
+    ('PerV', 'Per', 'Viskeler', '05.06.2015', 'CEO', 80000.00,1),
+    ('AtPa', 'Atle', 'Patle', '02.07.1876', 'Design-manager', 5000.00,1),
+    ('Anto', 'Anton', 'Tran', '03.07.2000', 'Design', 60000.00,1),
+    ('Vlad', 'Vladimir', 'Putin', '12.07.2007', 'Manager', 70000.00,2),
+    ('Glad', 'Maksim', 'Orvill', '02.07.2008', 'Danser', 10000.00,2),
+    ('Tord', 'Tord', 'Gryting', '03.07.2013', 'Synger', 9000.00,2),
+    ('Bath', 'Bathu', 'Chechik', '04.07.2012', 'Dealer', 40000.00,2),
+    ('Andr', 'Andreas', 'Wergeland', '05.06.2011', 'Superhero', 30000.00,3),
+    ('Kevn', 'Kevin', 'Nilsen', '08.07.2010', 'BreakDancer', 50000.00,3),
+    ('DonD', 'Donald', 'Trump', '19.01.2005', 'Programmer', 70000.00,3);
+    
+Set search_path to oblig_jpa;
+ALTER TABLE avdeling
+ADD CONSTRAINT FK_idansatt
+FOREIGN KEY (idansatt) REFERENCES Ansatt(idansatt);

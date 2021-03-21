@@ -1,0 +1,11 @@
+set search_path to oblig_jpa;
+create table Ansatt_har_prosjekt
+(
+	idansatt int not null,
+	idprosjekt int not null,
+	timer int null,
+	rolle varchar(40) null,
+	constraint Ansatt_har_prosjekt_pk primary key(idprosjekt)
+	
+	
+);
