@@ -20,12 +20,12 @@ public class AvdelingDAO {
 		
 		EntityManager em = emf.createEntityManager();
 
-        Avdeling avdeling;
+        Avdeling avdeling=null;
         try {
              avdeling = em.find(Avdeling.class, id);
-            
+           
         } finally {
-            em.close();
+        	em.close();
         }
 		return avdeling;
 	}
@@ -51,5 +51,21 @@ public class AvdelingDAO {
 	
 	return nyAvdeling.getIdAvdeling();
 	
+	}
+	
+	public List<Avdeling> skrivUtAlle(){
+		
+		EntityManager em = emf.createEntityManager();
+		List<Avdeling> avdelinger = null;
+		
+		try {
+			String queryString = "SELECT a FROM Avdeling a ORDER BY a.idavdeling";
+			TypedQuery<Avdeling> query = em.createQuery(queryString, Avdeling.class);
+			avdelinger = query.getResultList();
+			
+		} finally {
+			em.close();
+		}
+		return avdelinger;
 	}
 }

@@ -26,8 +26,6 @@ public class Avdeling {
 	private Integer idavdeling;
 	private String navn;
 	
-//	@OneToOne
-//	@JoinColumn(name="idansatt")
 	private Integer idansatt;
 	
 	@OneToMany(mappedBy = "avdeling")

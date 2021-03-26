@@ -53,3 +53,27 @@ Set search_path to oblig_jpa;
 ALTER TABLE avdeling
 ADD CONSTRAINT FK_idansatt
 FOREIGN KEY (idansatt) REFERENCES Ansatt(idansatt);
+
+create table Ansatt_har_prosjekt
+(
+	idansatt int null,
+	idprosjekt int null,
+	timer int null,
+	rolle varchar(40) null,
+	constraint Ansatt_har_prosjekt_pk primary key(idprosjekt, idansatt),
+	CONSTRAINT Prosjekt_har_ansatt_fk FOREIGN KEY(idprosjekt) REFERENCES Prosjekt(idprosjekt),
+	CONSTRAINT Ansatt_har_prosjekt_fk FOREIGN key(idansatt) REFERENCES Ansatt(idansatt)
+	
+);
+set search_path to oblig_jpa;
+create table Ansatt_har_prosjekt
+(
+	idansatt int null,
+	idprosjekt int null,
+	timer int null,
+	rolle varchar(40) null,
+	constraint Ansatt_har_prosjekt_pk primary key(idprosjekt, idansatt),
+	CONSTRAINT Prosjekt_har_ansatt_fk FOREIGN KEY(idprosjekt) REFERENCES Prosjekt(idprosjekt),
+	CONSTRAINT Ansatt_har_prosjekt_fk FOREIGN key(idansatt) REFERENCES Ansatt(idansatt)
+	
+);

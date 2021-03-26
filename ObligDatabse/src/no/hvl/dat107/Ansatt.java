@@ -2,18 +2,25 @@ package no.hvl.dat107;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
 @Entity
-@Table(schema = "oblig_jpa")
+@Table(name = "ansatt",schema = "oblig_jpa")
 @NamedQuery(name = "hentAlleAnsatte", query ="SELECT a FROM Ansatt a")
 public class Ansatt {
 
@@ -31,6 +38,13 @@ public class Ansatt {
 	@JoinColumn(name = "idavdeling")
 	private Avdeling avdeling;
 	
+	@ManyToMany(mappedBy="ansatte")
+    private List<Prosjekt> prosjekter;
+ 
+	 @OneToMany(mappedBy="ansatt")
+	 private List<Prosjektdeltagelse> deltagelser;
+	
+
 	public Ansatt() {
 		
 	}
@@ -47,7 +61,34 @@ public class Ansatt {
 		
 	}
 	
-	
+	public void skrivUt(String innrykk) {
+        System.out.printf("%sAnsatt nr %d: %s %s", innrykk, idansatt, fornavn, etternavn);
+    }
+	public void skrivUtMedProsjekter() {
+        System.out.println();
+        skrivUt("");
+        prosjekter.forEach(p -> p.skrivUt("\n   "));
+    }
+	public void leggTilProsjekt(Prosjekt p) {
+        prosjekter.add(p);
+    }
+
+    public void fjernProsjekt(Prosjekt p) {
+        prosjekter.remove(p);
+    }
+  
+    public void leggTilProsjektdeltagelse(Prosjektdeltagelse prosjektdeltagelse) {
+        deltagelser.add(prosjektdeltagelse);
+    }
+
+    public void fjernProsjektdeltagelse(Prosjektdeltagelse prosjektdeltagelse) {
+        deltagelser.remove(prosjektdeltagelse);
+    }
+    
+    public List<Prosjektdeltagelse> getDeltagelser() {
+		return deltagelser;
+	}
+    
 	public Integer getIdAnsatt() {
 		return idansatt;
 	}
@@ -106,8 +147,7 @@ public class Ansatt {
 	public void setDepartment(Avdeling avdeling) {
 		this.avdeling = avdeling;
 	}
-
-
+	
 	@Override
 	public String toString() {
 		KonsollTabell str = new KonsollTabell();

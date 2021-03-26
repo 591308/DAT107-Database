@@ -2,6 +2,7 @@ package no.hvl.dat107;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -9,10 +10,13 @@ public class Main {
 
 	private static AnsattDAO dao;
 	private static AvdelingDAO daoo;
+	private static ProsjektDAO dada;
+	
 	
 	public Main() {
 		dao = new AnsattDAO();
 		daoo = new AvdelingDAO();
+		dada = new ProsjektDAO();
 	}
 
 	public static void main(String[] args) {
@@ -31,7 +35,11 @@ public class Main {
 		System.out.println("Søk etter avdeling:               7");
 		System.out.println("Skriv ut ansatte i avdelingen:    8");
 		System.out.println("Legg til ny avdeling:             9");
-		System.out.println("Avslutt program:                 10\n");
+		System.out.println("Legg til prosjekt                10");
+		System.out.println("Registrere prosjektdeltagelse:   11");
+		System.out.println("Registrere timer på ansatt:      12");
+		System.out.println("Utskrift av info om prosjekt:    13");
+		System.out.println("Avslutt program:                 14\n");
 		
 		Scanner in = new Scanner(System.in);
 		
@@ -162,8 +170,9 @@ public class Main {
 			start();
 			break;
 		case 7://Finn avdeling med id
-			System.out.println("Finn avdeling ved å taste avdelings id");
 			
+			System.out.println("Finn avdeling ved å taste avdelings id");
+			daoo.skrivUtAlle();
 			Avdeling avdeling = daoo.finnAvdelingMedId(in.nextInt());
 			System.out.println("Avdelings Sjef er : " + dao.finnAnsattMedAnsattID(avdeling.getIdansatt()).getFornavn());
 			System.out.println(avdeling);
@@ -171,8 +180,11 @@ public class Main {
 			start();
 			break;
 		case 8://Skriv ut alle personer på spesifikk avdeling
-			
-			System.out.println("Skriv inn avdeling id du ønsker å skrive ut alle ansatte for");
+			AvdelingDAO avdn = new AvdelingDAO();
+			for(Avdeling a : avdn.skrivUtAlle()) {
+				System.out.println(a);
+			}
+			System.out.println("Skriv inn avdeling id for å få utskrift av ale ansatte i avdelingen: ");
 			
 			Avdeling avdeling1 = daoo.finnAvdelingMedId(in.nextInt());
 			System.out.println("Avdelings Sjef er : " + dao.finnAnsattMedAnsattID(avdeling1.getIdansatt()).getFornavn());
@@ -208,11 +220,89 @@ public class Main {
 			
 			start();
 			break;
+		case 10://legge til et prosjekt
+			
+			System.out.println("Skriv in navn på prosjektet: ");
+			String navnProsjekt = in.next();
+			System.out.println("Skriv inn beskrivelse på prosjektet: ");
+			in.nextLine();
+			String beskrivelse = in.nextLine();
+			
+			Prosjekt nyProsjekt = new Prosjekt(navnProsjekt, beskrivelse);
+			dada.leggTilProsjekt(nyProsjekt);
+			
+			start();
+			
+			break;
+		//registrere prosjektdeltagelse
+		case 11:
+			System.out.println("Skriv inn ansatt id du vil registrere på prosjektet: ");
+			int next = in.nextInt();
+			System.out.println("Søk etter prosjekt og skriv id til prosjekt du vil registrere ansatt på: ");
+			ProsjektDAO proj = new ProsjektDAO();
+			for(Prosjekt pl: proj.skrivUtAlle()) {
+				System.out.println(pl);
+			}
+			int nextt = in.nextInt();
+			System.out.println("Bestem rolle for ansatt i prosjektet: ");
+			String rolle = in.next();
+			dao.registrerProsjektdeltagelse(next, nextt,rolle);
+			start();
+			break;
+		case 12: //føre timer
+		
+			System.out.println("Søk etter ansatt id og prosjekt id og føre timer på ansatt i prosjektdeltagelsen");
+			System.out.println("Skriv inn ansatt id");
+			int INT = in.nextInt();
+			Ansatt ansProjDelt = dao.finnAnsattMedAnsattID(INT);
+				
+			for(Prosjektdeltagelse pd: ansProjDelt.getDeltagelser()) {
+				pd.skrivUt("\n");
+				if(!pd.toString().isEmpty()) {
+					System.out.println("\nSkriv inn ProDelt.Id");
+					int projId = in.nextInt();
+					System.out.println("Skriv in timer");
+					int timer = in.nextInt();
+					Prosjektdeltagelse prdl = dao.finnProsjektdeltagelse(projId);
+					int tm = 0;
+					tm = prdl.getTimer();
+					prdl.setTimer(timer + tm);
+					dao.oppdaterProsjektDeltagelse(prdl);
+				}
+			}
+			
+			start();
+			break;
+			
+		case 13:
+			
+			System.out.println("Velg prosjekt med prosjekt id for å få detaljert utskrift: ");
+			ProsjektDAO pro = new ProsjektDAO();
+			for(Prosjekt pl: pro.skrivUtAlle()) {
+				System.out.println(pl);
+			}
+			int project = in.nextInt();
+			Prosjekt pr = dada.finnProsjekt(project);
+			pr.toString();
+			List<Prosjektdeltagelse> deltagelser = pr.getDeltagelser();
+			int timr = 0;
+			for(Prosjektdeltagelse prd: deltagelser) {
+				prd.skrivUt("\n");
+				dao.finnProsjektdeltagelse(project);
+				timr += prd.getTimer();
+			}
+			
+			System.out.println("Totalt timer på prosjektet: " + timr + " timer.");
+			System.out.println("");
+			
+			start();
+			break;
 		default:
 			
 			in.close();
 		}
 		
 	}
+
 	
 }
