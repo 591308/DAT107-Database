@@ -173,7 +173,7 @@ public class AnsattDAO {
 	            a = em.find(Ansatt.class, a.getIdAnsatt());
 	            p = em.find(Prosjekt.class, p.getProsjektID());
 	            
-	            Prosjektdeltagelse pd = new Prosjektdeltagelse(a, p, rolle);
+	            Prosjektdeltagelse pd = new Prosjektdeltagelse(a, p, rolle, timer);
 	// Alternativt:            
 //	            a = em.merge(a);
 //	            p = em.merge(p);
