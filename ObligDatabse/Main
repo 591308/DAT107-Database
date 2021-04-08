@@ -62,8 +62,9 @@ create table Prosjekt
 	constraint prosjekt_pk primary key(idprosjekt)
 );
 
-create table Ansatt_har_prosjekt
+create table Prosjektdeltagelse
 (
+	prosjektdeltagelse_id serial,
 	idansatt int null,
 	idprosjekt int null,
 	timer int null,
