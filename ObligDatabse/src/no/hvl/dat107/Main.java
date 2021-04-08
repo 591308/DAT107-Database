@@ -240,13 +240,16 @@ public class Main {
 			int next = in.nextInt();
 			System.out.println("Søk etter prosjekt og skriv id til prosjekt du vil registrere ansatt på: ");
 			ProsjektDAO proj = new ProsjektDAO();
+			
 			for(Prosjekt pl: proj.skrivUtAlle()) {
 				System.out.println(pl);
 			}
 			int nextt = in.nextInt();
 			System.out.println("Bestem rolle for ansatt i prosjektet: ");
 			String rolle = in.next();
-			dao.registrerProsjektdeltagelse(next, nextt,rolle);
+			System.out.println("Registrere timer eller sett til 0");
+			int timrs = in.nextInt();
+			dao.registrerProsjektdeltagelse(next, nextt,rolle, timrs);
 			start();
 			break;
 		case 12: //føre timer
@@ -265,7 +268,11 @@ public class Main {
 					int timer = in.nextInt();
 					Prosjektdeltagelse prdl = dao.finnProsjektdeltagelse(projId);
 					int tm = 0;
-					tm = prdl.getTimer();
+					if(prdl.getTimer() == null) {
+						tm = 0;
+					}else {
+						tm = prdl.getTimer();
+					}
 					prdl.setTimer(timer + tm);
 					dao.oppdaterProsjektDeltagelse(prdl);
 				}
@@ -289,7 +296,11 @@ public class Main {
 			for(Prosjektdeltagelse prd: deltagelser) {
 				prd.skrivUt("\n");
 				dao.finnProsjektdeltagelse(project);
+				if(prd.getTimer() == 0) {
+					timr += prd.getTimer().intValue();
+				} else {
 				timr += prd.getTimer();
+				}
 			}
 			
 			System.out.println("Totalt timer på prosjektet: " + timr + " timer.");

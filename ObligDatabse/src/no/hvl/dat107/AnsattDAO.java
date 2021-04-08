@@ -134,7 +134,7 @@ public class AnsattDAO {
 	}
 	
 	//registrereProsjektDeltagelse med ansattId og prosjektId
-	 public void registrerProsjektdeltagelse(int ansattId, int prosjektId, String rolle) {
+	 public void registrerProsjektdeltagelse(int ansattId, int prosjektId, String rolle, int timer) {
 	    	
 	        EntityManager em = emf.createEntityManager();
 	        EntityTransaction tx = em.getTransaction();
@@ -144,7 +144,7 @@ public class AnsattDAO {
 	            Ansatt a = em.find(Ansatt.class, ansattId);
 	            Prosjekt p = em.find(Prosjekt.class, prosjektId);
 	            
-	            Prosjektdeltagelse pd = new Prosjektdeltagelse(a, p, rolle);
+	            Prosjektdeltagelse pd = new Prosjektdeltagelse(a, p, rolle, timer);
 	            
 	            em.persist(pd);
 	            
@@ -163,7 +163,7 @@ public class AnsattDAO {
 	        }
 	    }
 	    
-	    public void registrerProsjektdeltagelse(Ansatt a, Prosjekt p, String rolle) {
+	    public void registrerProsjektdeltagelse(Ansatt a, Prosjekt p, String rolle, int timer) {
 	    	
 	        EntityManager em = emf.createEntityManager();
 	        EntityTransaction tx = em.getTransaction();
@@ -259,7 +259,6 @@ public class AnsattDAO {
 			
 			
 			EntityManager em = emf.createEntityManager();
-			EntityTransaction tx = em.getTransaction();
 			String queryString = "SELECT SUM(timer) FROM prosjektdeltagelse pr WHERE pr.idprosjekt= ?1";
 	        long timer = 0;
 	        try {
